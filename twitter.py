@@ -1,6 +1,23 @@
 import os
 from flask import Flask, redirect, url_for
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
+import tweepy
+
+# Authenticate to Twitter
+consumer_key = "IRtAWN2xOvjmCue4lmQEkHNoQ" 
+consumer_secret = "veMK7T5audEbTegdB6gEm0uYnnco6dDp1JvEmciGd5vo5LF9Sx"
+
+# OAuth 2 Authentication to consumer key and consumer secret 
+auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
+  
+# Create API object
+# api call limitations
+api = tweepy.API(auth, wait_on_rate_limit=True,
+    wait_on_rate_limit_notify=True)
+
+# ids
+whitehouse = 822215673812119553
+truongnfrank = 849797017396285440
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersekrit")
@@ -16,3 +33,13 @@ def index():
     resp = twitter.get("account/verify_credentials.json")
     assert resp.ok
     return "You are @{screen_name} on Twitter".format(screen_name=resp.json()["screen_name"])
+
+def retweet():
+    for status in tweepy.Cursor(api.user_timeline, screen_name="whitehouse", tweet_mode="extended").items(1):
+        #print(status)
+        #print(status.user.name)
+        print(status.id)
+        tweet_id = status.id
+        #print(status.created_at)
+        print(status.full_text)
+        api.retweet(tweet_id)

@@ -34,7 +34,7 @@ def index():
         return redirect(url_for("twitter.login"))
     resp = twitter.get("account/verify_credentials.json")
     assert resp.ok
-    return "You are @{screen_name} on Twitter".format(screen_name=resp.json()["screen_name"])
+    return "You are @{screen_name} on Twitter".format(screen_name=resp.json()["screen_name"] + retweet() + "test")
 
 def retweet():
     for status in tweepy.Cursor(api.user_timeline, screen_name="whitehouse", tweet_mode="extended").items(1):

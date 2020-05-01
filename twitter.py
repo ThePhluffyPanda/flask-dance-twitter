@@ -4,11 +4,13 @@ from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 import tweepy
 
 # Authenticate to Twitter
-consumer_key = "IRtAWN2xOvjmCue4lmQEkHNoQ" 
-consumer_secret = "veMK7T5audEbTegdB6gEm0uYnnco6dDp1JvEmciGd5vo5LF9Sx"
+
+
+app.config["TWITTER_OAUTH_CLIENT_KEY"] = os.environ.get("TWITTER_OAUTH_CLIENT_KEY")
+app.config["TWITTER_OAUTH_CLIENT_SECRET"] = os.environ.get("TWITTER_OAUTH_CLIENT_SECRET")
 
 # OAuth 2 Authentication to consumer key and consumer secret 
-auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
+auth = tweepy.AppAuthHandler("TWITTER_OAUTH_CLIENT_KEY", "TWITTER_OAUTH_CLIENT_SECRET")
   
 # Create API object
 # api call limitations
@@ -21,8 +23,8 @@ truongnfrank = 849797017396285440
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersekrit")
-app.config["TWITTER_OAUTH_CLIENT_KEY"] = os.environ.get("TWITTER_OAUTH_CLIENT_KEY")
-app.config["TWITTER_OAUTH_CLIENT_SECRET"] = os.environ.get("TWITTER_OAUTH_CLIENT_SECRET")
+#app.config["TWITTER_OAUTH_CLIENT_KEY"] = os.environ.get("TWITTER_OAUTH_CLIENT_KEY")
+#app.config["TWITTER_OAUTH_CLIENT_SECRET"] = os.environ.get("TWITTER_OAUTH_CLIENT_SECRET")
 twitter_bp = make_twitter_blueprint()
 app.register_blueprint(twitter_bp, url_prefix="/login")
 

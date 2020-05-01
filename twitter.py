@@ -34,8 +34,10 @@ def index():
         return redirect(url_for("twitter.login"))
     resp = twitter.get("account/verify_credentials.json")
     assert resp.ok
-    return "You are @{screen_name} on Twitter".format(screen_name=resp.json()["screen_name"]) + retweet() + "test"
+    print("You are @{screen_name} on Twitter".format(screen_name=resp.json()["screen_name"]))
+    return redirect('/retweet') 
 
+@app.route("/retweet")
 def retweet():
     for status in tweepy.Cursor(api.user_timeline, screen_name="whitehouse", tweet_mode="extended").items(1):
         #print(status)
@@ -45,3 +47,4 @@ def retweet():
         #print(status.created_at)
         print(status.full_text)
         api.retweet(tweet_id)
+        return "you retweeted " + tweet_id
